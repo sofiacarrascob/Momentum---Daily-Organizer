@@ -1,0 +1,6 @@
+{
+  "name": "momentum",
+  "description": "A modern, minimal app to organize your day, build daily habits, and track long-term goals.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

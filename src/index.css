@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-rounded: "Quicksand", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  
+  /* Turquoise Custom Palette (#7affc9 themed) */
+  --color-turquoise-50: #f0fffb;
+  --color-turquoise-100: #d2ffef;
+  --color-turquoise-200: #a3ffd9;
+  --color-turquoise-300: #7affc9;
+  --color-turquoise-400: #4effb5;
+  --color-turquoise-500: #7affc9;
+  --color-turquoise-600: #00d984;
+  --color-turquoise-700: #00a866;
+  --color-turquoise-800: #007a4a;
+  --color-turquoise-900: #004d2e;
+  --color-turquoise-950: #002617;
+
+  /* Orange Custom Palette */
+  --color-orange-50: #fff7ed;
+  --color-orange-100: #ffedd5;
+  --color-orange-200: #fed7aa;
+  --color-orange-300: #fdba74;
+  --color-orange-400: #fb923c;
+  --color-orange-500: #f97316;
+  --color-orange-600: #ea580c;
+  --color-orange-700: #c2410c;
+  --color-orange-800: #9a3412;
+  --color-orange-950: #431407;
+}
+
+/* Base resets & styling */
+body {
+  font-family: var(--font-sans);
+  background-color: #ffffff;
+  color: #374151; /* soft dark gray text */
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom scrollbars for structured list layouts */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #e5e7eb;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d1d5db;
+}
