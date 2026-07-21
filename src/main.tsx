@@ -8,3 +8,18 @@ createRoot(document.getElementById('root')!).render(
     <App />
   </StrictMode>,
 );
+
+// Register service worker for Progressive Web App (PWA)
+const isProd = (import.meta as any).env?.PROD;
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then((registration) => {
+        console.log(`SW registered in ${isProd ? 'Production' : 'Development'}: `, registration);
+      })
+      .catch((error) => {
+        console.error('SW registration failed: ', error);
+      });
+  });
+}

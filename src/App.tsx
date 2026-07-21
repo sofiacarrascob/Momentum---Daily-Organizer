@@ -23,6 +23,7 @@ import { Schedule } from './components/Schedule';
 import { Habits } from './components/Habits';
 import { Goals } from './components/Goals';
 import { Statistics } from './components/Statistics';
+import { PWAInstallPrompt } from './components/PWAInstallPrompt';
 
 const STORAGE_KEY_USER_NAME = 'daily_organizer_user_name';
 
@@ -303,6 +304,9 @@ export default function App() {
           })}
         </nav>
       </div>
+
+      {/* PWA Custom Installation Banner */}
+      <PWAInstallPrompt />
 
     </div>
   );
