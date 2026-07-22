@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Download, X, Sparkles, Share, PlusSquare, ExternalLink, Smartphone, CheckCircle2 } from 'lucide-react';
+import { MomentumLogo } from './MomentumLogo';
 
 export function PWAInstallPrompt() {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
@@ -115,17 +116,17 @@ export function PWAInstallPrompt() {
 
   return (
     <>
-      {/* 1. Header Quick Install Trigger Button (rendered dynamically or fixed) */}
+      {/* 1. Header Quick Install Trigger Button */}
       <div className="fixed top-3.5 right-36 sm:right-44 md:right-52 z-40 hidden min-[400px]:flex items-center">
         <button
           id="pwa-header-install-btn"
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-1.5 bg-turquoise-500/10 hover:bg-turquoise-500/20 text-turquoise-700 border border-turquoise-200/80 px-2.5 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer shadow-2xs hover:scale-105 active:scale-95"
+          className="flex items-center gap-1.5 bg-[#76DFCB]/20 hover:bg-[#76DFCB]/35 text-[#137B7C] border border-[#76DFCB]/60 px-2.5 py-1 rounded-full text-xs font-bold transition-all cursor-pointer shadow-2xs hover:scale-105 active:scale-95"
           title="Install Momentum as App"
         >
-          <Download size={13} className="text-turquoise-600 stroke-[2.5]" />
-          <span className="hidden sm:inline font-rounded">Get App</span>
-          <span className="sm:hidden font-rounded">App</span>
+          <Download size={13} className="text-[#137B7C] stroke-[2.5]" />
+          <span className="hidden sm:inline font-brand">Get App</span>
+          <span className="sm:hidden font-brand">App</span>
         </button>
       </div>
 
@@ -137,18 +138,16 @@ export function PWAInstallPrompt() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 30, scale: 0.95 }}
             transition={{ type: 'spring', stiffness: 350, damping: 30 }}
-            className="fixed bottom-20 md:bottom-6 right-0 md:right-6 left-0 md:left-auto mx-4 md:mx-0 z-50 max-w-sm md:max-w-md bg-white rounded-3xl border border-neutral-200/80 shadow-[0_12px_36px_rgba(0,0,0,0.12)] p-4 select-none"
+            className="fixed bottom-20 md:bottom-6 right-0 md:right-6 left-0 md:left-auto mx-4 md:mx-0 z-50 max-w-sm md:max-w-md bg-[#FEFBEC] rounded-3xl border border-[#DFD8C4] shadow-[0_12px_36px_rgba(48,18,8,0.12)] p-4 select-none"
             id="pwa-install-banner"
           >
             <div className="flex items-start gap-3.5">
               {/* App Icon */}
               <div className="flex-shrink-0 relative">
-                <img
-                  src="/app_logo.jpg"
-                  alt="Momentum Logo"
-                  className="w-12 h-12 rounded-2xl border border-neutral-100 shadow-2xs object-cover"
-                />
-                <div className="absolute -bottom-1 -right-1 bg-amber-500 text-white p-0.5 rounded-full border-2 border-white flex items-center justify-center">
+                <div className="w-12 h-12 rounded-2xl bg-[#FEFBEC] border border-[#DFD8C4] shadow-2xs flex items-center justify-center p-1">
+                  <MomentumLogo size={36} />
+                </div>
+                <div className="absolute -bottom-1 -right-1 bg-[#EF681E] text-white p-0.5 rounded-full border-2 border-[#FEFBEC] flex items-center justify-center">
                   <Sparkles size={10} className="fill-white" />
                 </div>
               </div>
@@ -156,19 +155,19 @@ export function PWAInstallPrompt() {
               {/* Text info */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-2">
-                  <h3 className="text-sm font-bold text-neutral-800 font-rounded" id="pwa-banner-title">
+                  <h3 className="text-sm font-black text-[#301208] font-brand" id="pwa-banner-title">
                     Install Momentum
                   </h3>
                   <button
                     id="pwa-btn-close-icon"
                     onClick={handleDismissBanner}
-                    className="text-neutral-400 hover:text-neutral-600 p-1 transition-colors rounded-full hover:bg-neutral-100 cursor-pointer"
+                    className="text-[#68614E] hover:text-[#301208] p-1 transition-colors rounded-full hover:bg-[#F3EFE0] cursor-pointer"
                     title="Dismiss"
                   >
                     <X size={15} />
                   </button>
                 </div>
-                <p className="text-xs text-neutral-500 mt-0.5 leading-relaxed" id="pwa-banner-desc">
+                <p className="text-xs text-[#68614E] mt-0.5 leading-relaxed font-medium" id="pwa-banner-desc">
                   Install Momentum on your home screen for quick offline access and a native app experience.
                 </p>
 
@@ -177,7 +176,7 @@ export function PWAInstallPrompt() {
                   <button
                     id="pwa-btn-install"
                     onClick={handleInstallClick}
-                    className="bg-turquoise-500 hover:bg-turquoise-600 text-white font-bold text-xs px-4 py-2 rounded-xl transition-all shadow-sm shadow-turquoise-500/20 cursor-pointer flex items-center gap-1.5"
+                    className="bg-[#76DFCB] hover:bg-[#31ADAF] text-[#301208] font-bold text-xs px-4 py-2 rounded-xl transition-all shadow-xs cursor-pointer flex items-center gap-1.5"
                   >
                     <Download size={14} strokeWidth={2.5} />
                     <span>Install App</span>
@@ -185,7 +184,7 @@ export function PWAInstallPrompt() {
                   <button
                     id="pwa-btn-later"
                     onClick={handleDismissBanner}
-                    className="bg-neutral-100 hover:bg-neutral-200/70 text-neutral-600 font-semibold text-xs px-3 py-2 rounded-xl transition-all cursor-pointer"
+                    className="bg-[#F3EFE0] hover:bg-[#E9E4D3] text-[#301208] font-bold text-xs px-3 py-2 rounded-xl transition-all cursor-pointer"
                   >
                     Maybe Later
                   </button>
@@ -221,11 +220,9 @@ export function PWAInstallPrompt() {
 
               {/* Modal Header */}
               <div className="flex items-center gap-3.5 mb-5">
-                <img
-                  src="/app_logo.jpg"
-                  alt="Momentum App Icon"
-                  className="w-14 h-14 rounded-2xl border border-neutral-100 shadow-xs object-cover"
-                />
+                <div className="w-14 h-14 rounded-2xl bg-[#FEFBEC] border border-[#DFD8C4] shadow-xs flex items-center justify-center p-1.5">
+                  <MomentumLogo size={42} />
+                </div>
                 <div>
                   <h2 className="text-lg font-bold text-neutral-900 font-rounded">
                     Install Momentum App

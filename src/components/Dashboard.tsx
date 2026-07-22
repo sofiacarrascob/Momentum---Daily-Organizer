@@ -7,7 +7,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { Flame, CheckCircle2, Circle, Clock, TrendingUp, Calendar, Heart, Award } from 'lucide-react';
 import { Task, Habit, Goal } from '../types';
-import { getTodayDateString, formatDateFriendly } from '../utils/dateUtils';
+import { getTodayDateString, formatDateFriendly, formatTaskTimeAndDuration } from '../utils/dateUtils';
 import { getColorScheme } from '../utils/colorUtils';
 import { getQuoteOfTheDay, getRandomGreeting } from '../utils/quotes';
 import { HabitIcon } from './HabitIcon';
@@ -71,12 +71,12 @@ export const Dashboard: React.FC<DashboardProps> = ({
       {/* Header Greeting & Date */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4" id="dashboard-header">
         <div>
-          <h1 className="text-3xl font-bold text-neutral-800 tracking-tight" id="dashboard-greeting">
+          <h1 className="text-3xl font-black text-[#301208] font-heading tracking-tight" id="dashboard-greeting">
             {greeting}
           </h1>
-          <div className="flex items-center gap-2 text-neutral-500 mt-1" id="dashboard-date-container">
-            <Calendar size={16} className="text-turquoise-500" />
-            <span className="text-sm font-medium">{friendlyDate}</span>
+          <div className="flex items-center gap-2 text-[#68614E] mt-1" id="dashboard-date-container">
+            <Calendar size={16} className="text-[#31ADAF]" />
+            <span className="text-sm font-semibold">{friendlyDate}</span>
           </div>
         </div>
 
@@ -84,15 +84,15 @@ export const Dashboard: React.FC<DashboardProps> = ({
         <motion.div
           id="dashboard-streak-badge"
           whileHover={{ scale: 1.03 }}
-          className="flex items-center gap-3 bg-orange-50 border border-orange-100 rounded-2xl px-5 py-3 self-start md:self-auto cursor-pointer shadow-sm shadow-orange-500/5"
+          className="flex items-center gap-3 bg-[#EF681E]/10 border border-[#EF681E]/20 rounded-2xl px-5 py-3 self-start md:self-auto cursor-pointer shadow-xs"
           onClick={() => setActiveTab('habits')}
         >
-          <div className="bg-orange-500 text-white p-2 rounded-xl" id="dashboard-streak-icon-container">
+          <div className="bg-[#EF681E] text-white p-2 rounded-xl" id="dashboard-streak-icon-container">
             <Flame className="w-5 h-5 animate-pulse" />
           </div>
           <div>
-            <div className="text-xs text-orange-600 font-medium">Daily Streak</div>
-            <div className="text-xl font-bold text-orange-700 leading-none">
+            <div className="text-xs text-[#EF681E] font-bold uppercase tracking-wider">Daily Streak</div>
+            <div className="text-xl font-black text-[#301208] leading-none mt-0.5">
               {streak} {streak === 1 ? 'Day' : 'Days'}
             </div>
           </div>
@@ -101,20 +101,20 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
       {/* Hero Quote Card */}
       <div
-        className="bg-neutral-50/50 border border-neutral-100 rounded-3xl p-6 relative overflow-hidden"
+        className="bg-[#F3EFE0]/70 border border-[#DFD8C4]/80 rounded-3xl p-6 relative overflow-hidden shadow-2xs"
         id="dashboard-quote-card"
       >
-        <div className="absolute top-0 right-0 p-8 text-neutral-200/40 pointer-events-none">
+        <div className="absolute top-0 right-0 p-8 text-[#C2BBA7]/30 pointer-events-none">
           <Heart size={80} strokeWidth={1} />
         </div>
         <div className="relative z-10 max-w-xl">
-          <span className="text-xs font-semibold text-turquoise-600 uppercase tracking-widest bg-turquoise-50 px-2.5 py-1 rounded-full">
+          <span className="text-[11px] font-black text-[#137B7C] uppercase tracking-widest bg-[#76DFCB]/30 px-3 py-1 rounded-full">
             Today's Focus
           </span>
-          <p className="text-base text-neutral-700 italic mt-3 font-medium">
+          <p className="text-base text-[#301208] italic mt-3 font-semibold">
             "{quote.text}"
           </p>
-          <p className="text-xs text-neutral-500 mt-1 font-medium">— {quote.author}</p>
+          <p className="text-xs text-[#68614E] mt-1 font-bold">— {quote.author}</p>
         </div>
       </div>
 
@@ -122,11 +122,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6" id="dashboard-bento-grid">
         
         {/* Left Bento: Daily Overview & Progress (lg:col-span-5) */}
-        <div className="lg:col-span-5 bg-white border border-neutral-100 rounded-3xl p-6 shadow-sm shadow-neutral-100 flex flex-col justify-between gap-6" id="dashboard-overview-card">
+        <div className="lg:col-span-5 bg-white border border-[#DFD8C4]/80 rounded-3xl p-6 shadow-xs flex flex-col justify-between gap-6" id="dashboard-overview-card">
           <div>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-neutral-800 tracking-tight">Today's Progress</h2>
-              <span className="text-xs font-medium text-neutral-500 bg-neutral-100 px-2 py-0.5 rounded-md">
+              <h2 className="text-lg font-black text-[#301208] font-heading tracking-tight">Today's Progress</h2>
+              <span className="text-xs font-bold text-[#68614E] bg-[#F3EFE0] px-2.5 py-1 rounded-lg">
                 {completedItems}/{totalItems} Done
               </span>
             </div>
@@ -139,7 +139,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                     cx="72"
                     cy="72"
                     r="60"
-                    stroke="#f3f4f6"
+                    stroke="#F3EFE0"
                     strokeWidth="10"
                     fill="transparent"
                   />
@@ -147,7 +147,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                     cx="72"
                     cy="72"
                     r="60"
-                    stroke="var(--color-turquoise-500)"
+                    stroke="#76DFCB"
                     strokeWidth="10"
                     fill="transparent"
                     strokeDasharray={376.8}
@@ -158,33 +158,33 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   />
                 </svg>
                 <div className="absolute flex flex-col items-center">
-                  <span className="text-3xl font-extrabold text-neutral-800">{progressPercent}%</span>
-                  <span className="text-2xs text-neutral-400 font-semibold tracking-wider uppercase">Complete</span>
+                  <span className="text-3xl font-black text-[#301208] font-heading">{progressPercent}%</span>
+                  <span className="text-[10px] text-[#68614E] font-bold tracking-wider uppercase">Complete</span>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="border-t border-neutral-100 pt-4 grid grid-cols-2 gap-4 text-center">
-            <div className="cursor-pointer hover:bg-neutral-50 p-2 rounded-2xl transition-colors" onClick={() => setActiveTab('schedule')}>
-              <div className="text-2xl font-bold text-turquoise-600">{completedTodayTasks.length}/{todayTasks.length}</div>
-              <div className="text-xs text-neutral-500 font-medium">Tasks Completed</div>
+          <div className="border-t border-[#DFD8C4]/50 pt-4 grid grid-cols-2 gap-4 text-center">
+            <div className="cursor-pointer hover:bg-[#FAF7E8] p-2.5 rounded-2xl transition-colors" onClick={() => setActiveTab('schedule')}>
+              <div className="text-2xl font-black text-[#137B7C] font-heading">{completedTodayTasks.length}/{todayTasks.length}</div>
+              <div className="text-xs text-[#68614E] font-bold">Tasks Completed</div>
             </div>
-            <div className="cursor-pointer hover:bg-neutral-50 p-2 rounded-2xl transition-colors" onClick={() => setActiveTab('habits')}>
-              <div className="text-2xl font-bold text-orange-500">{completedTodayHabits.length}/{habits.length}</div>
-              <div className="text-xs text-neutral-500 font-medium">Habits Done</div>
+            <div className="cursor-pointer hover:bg-[#FAF7E8] p-2.5 rounded-2xl transition-colors" onClick={() => setActiveTab('habits')}>
+              <div className="text-2xl font-black text-[#EF681E] font-heading">{completedTodayHabits.length}/{habits.length}</div>
+              <div className="text-xs text-[#68614E] font-bold">Habits Done</div>
             </div>
           </div>
         </div>
 
         {/* Right Bento: Top 3 Priorities (lg:col-span-7) */}
-        <div className="lg:col-span-7 bg-white border border-neutral-100 rounded-3xl p-6 shadow-sm shadow-neutral-100 flex flex-col justify-between" id="dashboard-priorities-card">
+        <div className="lg:col-span-7 bg-white border border-[#DFD8C4]/80 rounded-3xl p-6 shadow-xs flex flex-col justify-between" id="dashboard-priorities-card">
           <div>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-neutral-800 tracking-tight">Top Priorities</h2>
+              <h2 className="text-lg font-black text-[#301208] font-heading tracking-tight">Top Priorities</h2>
               <button
                 onClick={() => setActiveTab('schedule')}
-                className="text-xs font-semibold text-turquoise-600 hover:text-turquoise-700 flex items-center gap-1 transition-colors cursor-pointer"
+                className="text-xs font-bold text-[#137B7C] hover:text-[#31ADAF] flex items-center gap-1 transition-colors cursor-pointer"
               >
                 View Timeline →
               </button>
@@ -203,33 +203,33 @@ export const Dashboard: React.FC<DashboardProps> = ({
                       whileHover={{ x: 3 }}
                       className={`flex items-center justify-between p-4 rounded-2xl border transition-all ${
                         isCompleted
-                          ? 'bg-neutral-50/50 border-neutral-100 opacity-65'
-                          : 'bg-white border-neutral-100 hover:border-neutral-200 shadow-xs'
+                          ? 'bg-[#FAF7E8]/60 border-[#DFD8C4]/50 opacity-65'
+                          : 'bg-white border-[#DFD8C4]/70 hover:border-[#31ADAF]/50 shadow-2xs'
                       }`}
                     >
                       <div className="flex items-center gap-3.5 flex-1 min-w-0">
                         <button
                           id={`priority-toggle-${task.id}`}
                           onClick={() => toggleTaskStatus(task.id)}
-                          className={`flex-shrink-0 cursor-pointer transition-colors p-0.5 rounded-full ${scheme.text}`}
+                          className="flex-shrink-0 cursor-pointer transition-colors p-0.5 rounded-full text-[#301208]"
                         >
                           {isCompleted ? (
-                            <CheckCircle2 className="w-5.5 h-5.5 text-turquoise-500 fill-turquoise-50/20" />
+                            <CheckCircle2 className="w-5.5 h-5.5 text-[#137B7C] fill-[#76DFCB]/30" />
                           ) : (
-                            <Circle className="w-5.5 h-5.5 text-neutral-300 hover:text-turquoise-500" />
+                            <Circle className="w-5.5 h-5.5 text-[#C2BBA7] hover:text-[#76DFCB]" />
                           )}
                         </button>
                         <div className="min-w-0 flex-1">
                           <p
-                            className={`text-sm font-semibold truncate ${
-                              isCompleted ? 'text-neutral-400 line-through font-normal' : 'text-neutral-800'
+                            className={`text-sm font-bold truncate ${
+                              isCompleted ? 'text-[#938C77] line-through font-normal' : 'text-[#301208]'
                             }`}
                           >
                             {task.title}
                           </p>
-                          <div className="flex items-center gap-1 text-xs text-neutral-400 mt-0.5">
+                          <div className="flex items-center gap-1 text-xs text-[#68614E] font-medium mt-0.5">
                             <Clock size={12} />
-                            <span>{task.time}</span>
+                            <span>{formatTaskTimeAndDuration(task.time, task.endTime).timeDisplay}</span>
                           </div>
                         </div>
                       </div>
@@ -241,18 +241,18 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 })}
               </div>
             ) : (
-              <div className="text-center py-8 text-neutral-400 flex flex-col items-center justify-center gap-3" id="dashboard-empty-priorities">
-                <div className="bg-neutral-50 p-3 rounded-full text-neutral-400">
+              <div className="text-center py-8 text-[#938C77] flex flex-col items-center justify-center gap-3" id="dashboard-empty-priorities">
+                <div className="bg-[#FAF7E8] p-3 rounded-full text-[#68614E]">
                   <CheckCircle2 size={24} />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-neutral-600">All caught up!</p>
-                  <p className="text-xs text-neutral-400 mt-0.5">No tasks planned for today yet.</p>
+                  <p className="text-sm font-bold text-[#301208]">All caught up!</p>
+                  <p className="text-xs text-[#68614E] mt-0.5">No tasks planned for today yet.</p>
                 </div>
                 <button
                   id="dashboard-create-task-btn"
                   onClick={() => setActiveTab('schedule')}
-                  className="mt-2 text-xs font-semibold bg-turquoise-500 hover:bg-turquoise-600 text-white px-4 py-2 rounded-xl transition-colors cursor-pointer shadow-sm shadow-turquoise-500/10"
+                  className="mt-2 text-xs font-bold bg-[#76DFCB] hover:bg-[#31ADAF] text-[#301208] px-4 py-2 rounded-xl transition-colors cursor-pointer shadow-xs"
                 >
                   Create Today's Plan
                 </button>
@@ -261,68 +261,75 @@ export const Dashboard: React.FC<DashboardProps> = ({
           </div>
 
           {/* Quick habit review bar */}
-          {habits.length > 0 && (
-            <div className="border-t border-neutral-100 pt-5 mt-5">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-bold text-neutral-500 uppercase tracking-wider">Quick Habits Checklist</span>
-                <span className="text-2xs font-semibold text-neutral-400">Tap to complete</span>
-              </div>
+          <div className="border-t border-[#DFD8C4]/60 pt-5 mt-5">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs font-black text-[#68614E] uppercase tracking-wider">Quick Habits Checklist</span>
+              <button
+                onClick={() => setActiveTab('habits')}
+                className="text-[11px] font-bold text-[#137B7C] hover:text-[#31ADAF] transition-colors cursor-pointer"
+              >
+                Manage Habits →
+              </button>
+            </div>
+            {habits.length > 0 ? (
               <div className="flex flex-wrap gap-2" id="dashboard-quick-habits">
                 {habits.slice(0, 4).map((h) => {
                   const done = h.completedDates.includes(todayStr);
-                  const scheme = getColorScheme(h.color);
                   return (
                     <motion.button
                       id={`quick-habit-${h.id}`}
                       key={h.id}
                       onClick={() => toggleHabitCompletion(h.id, todayStr)}
                       whileTap={{ scale: 0.95 }}
-                      className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-medium border transition-all cursor-pointer ${
+                      className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
                         done
-                          ? `${scheme.bg} ${scheme.border} ${scheme.text} font-semibold shadow-xs`
-                          : 'bg-white hover:bg-neutral-50 border-neutral-100 text-neutral-600'
+                          ? 'bg-[#76DFCB] border-[#31ADAF] text-[#301208] shadow-xs'
+                          : 'bg-white hover:bg-[#FAF7E8] border-[#DFD8C4]/70 text-[#301208]'
                       }`}
                     >
-                      <HabitIcon name={h.icon} size={14} className={done ? scheme.text : 'text-neutral-400'} />
+                      <HabitIcon name={h.icon} size={14} className={done ? 'text-[#301208]' : 'text-[#68614E]'} />
                       <span>{h.name}</span>
                     </motion.button>
                   );
                 })}
               </div>
-            </div>
-          )}
+            ) : (
+              <p className="text-xs text-[#938C77] font-medium italic">
+                No habits created yet. Click "Manage Habits" to set up your daily routines!
+              </p>
+            )}
+          </div>
         </div>
       </div>
 
       {/* Goal teaser */}
-      {goals.length > 0 && (
-        <div className="bg-white border border-neutral-100 rounded-3xl p-6 shadow-sm shadow-neutral-100" id="dashboard-goals-teaser">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold text-neutral-800 tracking-tight flex items-center gap-2">
-              <Award className="text-orange-500 w-5 h-5" />
-              <span>Goal Milestones</span>
-            </h2>
-            <button
-              onClick={() => setActiveTab('goals')}
-              className="text-xs font-semibold text-turquoise-600 hover:text-turquoise-700 flex items-center gap-1 transition-colors cursor-pointer"
-            >
-              View All Goals →
-            </button>
-          </div>
-          
+      <div className="bg-white border border-[#DFD8C4]/80 rounded-3xl p-6 shadow-xs" id="dashboard-goals-teaser">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-black text-[#301208] font-heading tracking-tight flex items-center gap-2">
+            <Award className="text-[#EF681E] w-5 h-5" />
+            <span>Goal Milestones</span>
+          </h2>
+          <button
+            onClick={() => setActiveTab('goals')}
+            className="text-xs font-bold text-[#137B7C] hover:text-[#31ADAF] flex items-center gap-1 transition-colors cursor-pointer"
+          >
+            View All Goals →
+          </button>
+        </div>
+        
+        {goals.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4" id="dashboard-goals-grid">
             {goals.slice(0, 3).map((g) => {
-              const scheme = getColorScheme(g.color);
               return (
-                <div key={g.id} className="p-4 rounded-2xl border border-neutral-100 hover:border-neutral-200 transition-colors" id={`dashboard-goal-${g.id}`}>
+                <div key={g.id} className="p-4 rounded-2xl border border-[#DFD8C4]/70 hover:border-[#31ADAF]/50 bg-[#FAF7E8]/40 transition-colors" id={`dashboard-goal-${g.id}`}>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-bold text-neutral-800 truncate pr-2">{g.name}</span>
-                    <span className={`text-xs font-semibold ${scheme.text}`}>{g.progress}%</span>
+                    <span className="text-sm font-bold text-[#301208] truncate pr-2">{g.name}</span>
+                    <span className="text-xs font-black text-[#EF681E] font-heading">{g.progress}%</span>
                   </div>
                   {/* Progress track */}
-                  <div className="w-full bg-neutral-100 h-2 rounded-full overflow-hidden">
+                  <div className="w-full bg-[#F3EFE0] h-2.5 rounded-full overflow-hidden">
                     <motion.div
-                      className={`h-full ${scheme.solidBg}`}
+                      className="h-full bg-[#76DFCB]"
                       initial={{ width: 0 }}
                       animate={{ width: `${g.progress}%` }}
                       transition={{ duration: 0.6, ease: 'easeOut' }}
@@ -332,8 +339,12 @@ export const Dashboard: React.FC<DashboardProps> = ({
               );
             })}
           </div>
-        </div>
-      )}
+        ) : (
+          <p className="text-xs text-[#938C77] font-medium italic">
+            No long-term goals set yet. Click "View All Goals" to add your first milestone!
+          </p>
+        )}
+      </div>
     </motion.div>
   );
 };

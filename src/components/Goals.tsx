@@ -78,12 +78,10 @@ export const Goals: React.FC<GoalsProps> = ({
   };
 
   const handleDelete = (id: string) => {
-    if (confirm('Are you sure you want to delete this long-term goal?')) {
-      deleteGoal(id);
-      if (editingGoal?.id === id) {
-        setIsCreateOpen(false);
-        resetForm();
-      }
+    deleteGoal(id);
+    if (editingGoal?.id === id) {
+      setIsCreateOpen(false);
+      resetForm();
     }
   };
 
@@ -111,7 +109,7 @@ export const Goals: React.FC<GoalsProps> = ({
       </div>
 
       {/* Goals Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6" id="goals-list-grid">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5" id="goals-list-grid">
         <AnimatePresence mode="popLayout">
           {goals.length > 0 ? (
             goals.map((goal) => {
@@ -126,120 +124,144 @@ export const Goals: React.FC<GoalsProps> = ({
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.98 }}
                   layout
-                  className="bg-white border border-neutral-100 rounded-3xl p-6 shadow-sm shadow-neutral-100 flex flex-col justify-between gap-5 relative overflow-hidden"
+                  className="bg-white border border-[#DFD8C4]/80 rounded-2xl p-3.5 sm:p-4 shadow-2xs hover:border-[#31ADAF]/40 transition-all flex flex-col justify-between gap-2.5 relative overflow-hidden group"
                 >
                   {/* Subtle success ribbon background for finished goals */}
                   {isCompleted && (
-                    <div className="absolute top-0 right-0 bg-emerald-500 text-white text-4xs font-bold uppercase px-3 py-1 rounded-bl-xl tracking-wider shadow-xs" id={`goal-completed-ribbon-${goal.id}`}>
+                    <div className="absolute top-0 right-0 bg-[#31ADAF] text-white text-[9px] font-black uppercase px-2.5 py-0.5 rounded-bl-lg tracking-wider shadow-2xs" id={`goal-completed-ribbon-${goal.id}`}>
                       Done
                     </div>
                   )}
 
-                  {/* Header Title & Theme Indicator */}
-                  <div className="space-y-1.5 pr-10">
-                    <div className="flex items-center gap-2">
-                      <span className={`w-2.5 h-2.5 rounded-full ${scheme.solidBg}`} />
-                      <span className="text-2xs font-semibold text-neutral-400 uppercase tracking-wider">
-                        {scheme.name} Milestone
+                  {/* Top section: Header Title, Accent, Actions */}
+                  <div className="space-y-1 pr-6">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${scheme.solidBg}`} />
+                        <span className="text-[10px] font-black text-[#68614E] uppercase tracking-wider truncate">
+                          {scheme.name} Milestone
+                        </span>
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex items-center gap-1" id={`goal-actions-${goal.id}`}>
+                        <button
+                          id={`goal-edit-btn-${goal.id}`}
+                          onClick={() => handleOpenEdit(goal)}
+                          className="p-1 text-[#68614E] hover:text-[#137B7C] rounded-lg hover:bg-[#F3EFE0] transition-colors cursor-pointer"
+                          title="Edit Goal Details"
+                        >
+                          <Edit2 size={13.5} />
+                        </button>
+                        <button
+                          id={`goal-delete-btn-${goal.id}`}
+                          onClick={() => handleDelete(goal.id)}
+                          className="p-1 text-[#68614E] hover:text-rose-600 rounded-lg hover:bg-rose-50 transition-colors cursor-pointer"
+                          title="Delete Goal"
+                        >
+                          <Trash2 size={13.5} />
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between gap-2">
+                      <h3 className="text-sm sm:text-base font-extrabold text-[#301208] leading-tight tracking-tight font-heading truncate">
+                        {goal.name}
+                      </h3>
+                      <span className="text-xs font-black text-[#EF681E] font-heading bg-[#EF681E]/10 px-2 py-0.5 rounded-md flex-shrink-0">
+                        {goal.progress}%
                       </span>
                     </div>
-                    <h3 className="text-lg font-bold text-neutral-850 leading-snug tracking-tight">
-                      {goal.name}
-                    </h3>
+
                     {goal.description && (
-                      <p className="text-xs text-neutral-500 leading-relaxed font-medium">
+                      <p className="text-xs text-[#68614E] leading-snug font-medium line-clamp-1">
                         {goal.description}
                       </p>
                     )}
                   </div>
 
-                  {/* Goal Progress Section */}
-                  <div className="space-y-2.5">
-                    <div className="flex items-center justify-between text-xs font-semibold text-neutral-500">
-                      <span>Milestone Progress</span>
-                      <span className={`${scheme.text} font-bold text-sm`}>{goal.progress}%</span>
-                    </div>
-
+                  {/* Goal Progress Bar & Quick Adjustments */}
+                  <div className="space-y-1.5">
                     {/* Progress Track */}
-                    <div className="w-full bg-neutral-100 h-2.5 rounded-full overflow-hidden" id={`goal-progress-track-${goal.id}`}>
+                    <div className="w-full bg-[#F3EFE0] h-2 rounded-full overflow-hidden" id={`goal-progress-track-${goal.id}`}>
                       <motion.div
-                        className={`h-full ${scheme.solidBg}`}
+                        className="h-full bg-[#76DFCB]"
                         initial={{ width: 0 }}
                         animate={{ width: `${goal.progress}%` }}
                         transition={{ duration: 0.5, ease: 'easeOut' }}
                       />
                     </div>
 
-                    {/* Quick Incrementor / Decrementor controls for single-click edit */}
-                    <div className="flex items-center justify-between gap-2 bg-neutral-50/60 hover:bg-neutral-50 px-3 py-2 rounded-2xl transition-all border border-neutral-100/50" id={`goal-quick-controls-${goal.id}`}>
-                      <span className="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider pl-0.5">
-                        adjust
+                    {/* Quick Incrementor / Decrementor controls */}
+                    <div className="flex items-center justify-between gap-2 bg-[#FAF7E8] px-2.5 py-1 rounded-xl border border-[#DFD8C4]/50" id={`goal-quick-controls-${goal.id}`}>
+                      <span className="text-[10px] font-bold text-[#68614E] uppercase tracking-wider">
+                        Progress Adjustment
                       </span>
                       <div className="flex items-center gap-1.5">
                         <button
                           id={`goal-dec-${goal.id}`}
                           onClick={() => updateGoalProgress(goal.id, Math.max(0, goal.progress - 5))}
                           disabled={goal.progress <= 0}
-                          className="w-7 h-7 rounded-xl bg-white border border-neutral-200/80 flex items-center justify-center text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900 disabled:opacity-40 transition-all cursor-pointer shadow-2xs"
+                          className="w-6 h-6 rounded-lg bg-white border border-[#DFD8C4] flex items-center justify-center text-[#301208] hover:bg-[#F3EFE0] disabled:opacity-40 transition-all cursor-pointer shadow-2xs"
                           title="Decrease by 5%"
                         >
-                          <Minus size={13} strokeWidth={2.5} />
+                          <Minus size={12} strokeWidth={2.5} />
                         </button>
                         <button
                           id={`goal-inc-${goal.id}`}
                           onClick={() => updateGoalProgress(goal.id, Math.min(100, goal.progress + 5))}
                           disabled={goal.progress >= 100}
-                          className="w-7 h-7 rounded-xl bg-white border border-neutral-200/80 flex items-center justify-center text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900 disabled:opacity-40 transition-all cursor-pointer shadow-2xs"
+                          className="w-6 h-6 rounded-lg bg-white border border-[#DFD8C4] flex items-center justify-center text-[#301208] hover:bg-[#F3EFE0] disabled:opacity-40 transition-all cursor-pointer shadow-2xs"
                           title="Increase by 5%"
                         >
-                          <Plus size={13} strokeWidth={2.5} />
+                          <Plus size={12} strokeWidth={2.5} />
                         </button>
                       </div>
                     </div>
-                  </div>
-
-                  {/* Actions Section */}
-                  <div className="flex items-center justify-end gap-1 border-t border-neutral-50 pt-3 mt-1" id={`goal-actions-${goal.id}`}>
-                    <button
-                      id={`goal-edit-btn-${goal.id}`}
-                      onClick={() => handleOpenEdit(goal)}
-                      className="p-1.5 text-neutral-400 hover:text-turquoise-600 rounded-lg hover:bg-neutral-50 transition-colors cursor-pointer"
-                      title="Edit Goal Details"
-                    >
-                      <Edit2 size={13.5} />
-                    </button>
-                    <button
-                      id={`goal-delete-btn-${goal.id}`}
-                      onClick={() => handleDelete(goal.id)}
-                      className="p-1.5 text-neutral-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition-colors cursor-pointer"
-                      title="Delete Goal"
-                    >
-                      <Trash2 size={13.5} />
-                    </button>
                   </div>
                 </motion.div>
               );
             })
           ) : (
             <div
-              className="col-span-full text-center py-16 text-neutral-400 flex flex-col items-center justify-center gap-4 bg-neutral-50/30 rounded-3xl border border-dashed border-neutral-200"
+              className="col-span-full text-center py-12 px-6 text-[#68614E] flex flex-col items-center justify-center gap-4 bg-[#FAF7E8]/50 rounded-3xl border border-dashed border-[#DFD8C4]"
               id="goals-empty-state"
             >
-              <div className="bg-neutral-50 p-4 rounded-full text-neutral-400">
-                <Trophy size={32} strokeWidth={1.5} className="text-orange-500 animate-bounce" />
+              <div className="bg-[#FEFBEC] p-3.5 rounded-2xl text-[#EF681E] shadow-2xs border border-[#DFD8C4]">
+                <Trophy size={28} strokeWidth={2} />
               </div>
-              <div className="max-w-xs">
-                <p className="text-sm font-semibold text-neutral-600">Track Long-term Milestones</p>
-                <p className="text-xs text-neutral-400 mt-1">
-                  Connect small daily loops into large-scale accomplishments. Define parameters like studying languages, designing code templates, or training targets.
+              <div className="max-w-sm">
+                <p className="text-base font-extrabold text-[#301208]">Track Long-term Milestones</p>
+                <p className="text-xs font-semibold text-[#68614E] mt-1">
+                  Connect small daily loops into large-scale accomplishments. Define goals like learning a language or building a portfolio.
                 </p>
               </div>
+
+              <div className="flex flex-wrap items-center justify-center gap-2 max-w-md pt-1">
+                <span className="text-xs font-bold text-[#938C77] w-full mb-1">Goal Suggestions:</span>
+                {[
+                  { name: 'Learn Conversational Language', description: 'Practice vocabulary and lessons daily', progress: 0, color: 'turquoise' },
+                  { name: 'Build Portfolio Website', description: 'Design and deploy a personal web app', progress: 0, color: 'purple' },
+                  { name: 'Maintain Fitness Target', description: 'Exercise or run 4 times a week', progress: 0, color: 'orange' },
+                ].map((sug) => (
+                  <button
+                    key={sug.name}
+                    type="button"
+                    onClick={() => addGoal(sug as any)}
+                    className="text-xs font-bold bg-white hover:bg-[#76DFCB]/20 text-[#301208] border border-[#DFD8C4] hover:border-[#137B7C] px-3 py-1.5 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs active:scale-95"
+                  >
+                    <Plus size={12} className="text-[#137B7C]" />
+                    <span>{sug.name}</span>
+                  </button>
+                ))}
+              </div>
+
               <button
                 id="goals-create-first-btn"
                 onClick={handleOpenCreate}
-                className="text-xs font-semibold bg-turquoise-500 hover:bg-turquoise-600 text-white px-4 py-2 rounded-xl transition-colors cursor-pointer shadow-sm shadow-turquoise-500/10"
+                className="mt-2 text-xs font-black bg-[#76DFCB] hover:bg-[#31ADAF] text-[#301208] px-5 py-2.5 rounded-xl transition-all cursor-pointer shadow-xs active:scale-95"
               >
-                Create a Goal
+                + Create Custom Goal
               </button>
             </div>
           )}

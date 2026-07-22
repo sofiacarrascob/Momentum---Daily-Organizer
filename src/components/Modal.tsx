@@ -68,7 +68,7 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, 
             </div>
 
             {/* Body */}
-            <div className="px-6 py-5 overflow-y-auto flex-1 text-sm text-neutral-600" id={`${idPrefix}-modal-body`}>
+            <div className="px-6 pt-5 pb-12 sm:pb-8 overflow-y-auto flex-1 text-sm text-neutral-600" id={`${idPrefix}-modal-body`}>
               {children}
             </div>
           </motion.div>

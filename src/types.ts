@@ -6,7 +6,8 @@
 export interface Task {
   id: string;
   title: string;
-  time: string; // "HH:MM"
+  time: string; // "HH:MM" (Start Time)
+  endTime?: string; // "HH:MM" (End Time)
   color: string; // color name identifier
   status: 'Pending' | 'Completed';
   date: string; // "YYYY-MM-DD"

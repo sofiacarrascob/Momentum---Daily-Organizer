@@ -39,36 +39,41 @@ const MOCK_TASKS = (): Task[] => {
       id: 'task-t1',
       title: 'Morning Meditation & Planning',
       time: '07:30',
+      endTime: '08:30',
       color: 'turquoise',
       status: 'Completed',
       date: today,
-      reminderTime: '07:25'
+      reminderTime: '07:20'
     },
     {
       id: 'task-t2',
       title: 'Refactor Core Components',
       time: '10:00',
-      color: 'turquoise',
+      endTime: '11:30',
+      color: 'skyblue',
       status: 'Completed',
       date: today,
-      reminderTime: '09:55'
+      reminderTime: '09:50'
     },
     {
       id: 'task-t3',
       title: 'Sync with Team Designer',
       time: '14:00',
-      color: 'purple',
+      endTime: '15:00',
+      color: 'lavender',
       status: 'Pending',
       date: today,
-      reminderTime: '13:55'
+      reminderTime: '13:50'
     },
     {
       id: 'task-t4',
       title: 'Evening Jog & Outdoor Stretch',
       time: '18:30',
-      color: 'orange',
+      endTime: '19:15',
+      color: 'green',
       status: 'Pending',
-      date: today
+      date: today,
+      reminderTime: '18:20'
     }
   ];
 };
@@ -139,10 +144,7 @@ const MOCK_GOALS = (): Goal[] => [
   }
 ];
 
-export function calculateStreak(habits: Habit[], todayStr: string): number {
-  if (habits.length === 0) return 0;
-
-  // Let's create a helper function to format dates correctly
+export function calculateStreak(tasks: Task[], habits: Habit[], todayStr: string): number {
   const formatDateStr = (d: Date) => {
     const year = d.getFullYear();
     const month = String(d.getMonth() + 1).padStart(2, '0');
@@ -150,45 +152,43 @@ export function calculateStreak(habits: Habit[], todayStr: string): number {
     return `${year}-${month}-${day}`;
   };
 
-  const isDateFullyCompleted = (dateStr: string) => {
-    return habits.every((h) => h.completedDates.includes(dateStr));
+  const isDateActive = (dateStr: string) => {
+    const hasCompletedTask = tasks.some((t) => t.date === dateStr && t.status === 'Completed');
+    const hasCompletedHabit = habits.some((h) => h.completedDates.includes(dateStr));
+    return hasCompletedTask || hasCompletedHabit;
   };
 
-  // Safe parsing using local midnight representation to avoid timezone shifts
   const [year, month, day] = todayStr.split('-').map(Number);
   const checkDate = new Date(year, month - 1, day);
 
-  const todayCompleted = isDateFullyCompleted(todayStr);
+  const todayActive = isDateActive(todayStr);
 
   let currentStreak = 0;
 
-  if (todayCompleted) {
+  if (todayActive) {
     currentStreak = 1;
-    // Walk backward starting from yesterday
     const prevDate = new Date(checkDate);
     while (true) {
       prevDate.setDate(prevDate.getDate() - 1);
       const prevDateStr = formatDateStr(prevDate);
-      if (isDateFullyCompleted(prevDateStr)) {
+      if (isDateActive(prevDateStr)) {
         currentStreak++;
       } else {
         break;
       }
     }
   } else {
-    // Check if yesterday is fully completed
     const yesterdayDate = new Date(checkDate);
     yesterdayDate.setDate(yesterdayDate.getDate() - 1);
     const yesterdayStr = formatDateStr(yesterdayDate);
 
-    if (isDateFullyCompleted(yesterdayStr)) {
+    if (isDateActive(yesterdayStr)) {
       currentStreak = 1;
-      // Walk backward starting from day before yesterday
       const prevDate = new Date(yesterdayDate);
       while (true) {
         prevDate.setDate(prevDate.getDate() - 1);
         const prevDateStr = formatDateStr(prevDate);
-        if (isDateFullyCompleted(prevDateStr)) {
+        if (isDateActive(prevDateStr)) {
           currentStreak++;
         } else {
           break;
@@ -218,52 +218,70 @@ export function useAppState() {
     if (savedTasks) {
       setTasks(JSON.parse(savedTasks));
     } else {
-      const mockTasks = MOCK_TASKS();
-      setTasks(mockTasks);
-      localStorage.setItem(STORAGE_KEY_TASKS, JSON.stringify(mockTasks));
+      setTasks([]);
+      localStorage.setItem(STORAGE_KEY_TASKS, JSON.stringify([]));
     }
 
     if (savedHabits) {
       setHabits(JSON.parse(savedHabits));
     } else {
-      const mockHabits = MOCK_HABITS();
-      setHabits(mockHabits);
-      localStorage.setItem(STORAGE_KEY_HABITS, JSON.stringify(mockHabits));
+      setHabits([]);
+      localStorage.setItem(STORAGE_KEY_HABITS, JSON.stringify([]));
     }
 
     if (savedGoals) {
       setGoals(JSON.parse(savedGoals));
     } else {
-      const mockGoals = MOCK_GOALS();
-      setGoals(mockGoals);
-      localStorage.setItem(STORAGE_KEY_GOALS, JSON.stringify(mockGoals));
+      setGoals([]);
+      localStorage.setItem(STORAGE_KEY_GOALS, JSON.stringify([]));
     }
 
     setIsLoaded(true);
   }, []);
 
-  // Compute and update streak whenever habits change
+  // Compute and update streak whenever tasks or habits change
   useEffect(() => {
     if (!isLoaded) return;
     const todayStr = getTodayDateString();
-    const computedStreak = calculateStreak(habits, todayStr);
+    const computedStreak = calculateStreak(tasks, habits, todayStr);
     setStreak(computedStreak);
-  }, [habits, isLoaded]);
+  }, [tasks, habits, isLoaded]);
 
   // Sync state helpers to update React state & localStorage
-  const updateTasksState = (newTasks: Task[]) => {
-    setTasks(newTasks);
-    localStorage.setItem(STORAGE_KEY_TASKS, JSON.stringify(newTasks));
+  const updateTasksState = (updater: Task[] | ((prev: Task[]) => Task[])) => {
+    setTasks((prev) => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      try {
+        localStorage.setItem(STORAGE_KEY_TASKS, JSON.stringify(next));
+      } catch (err) {
+        console.error('Failed to save tasks to localStorage:', err);
+      }
+      return next;
+    });
   };
 
-  const updateHabitsState = (newHabits: Habit[]) => {
-    setHabits(newHabits);
-    localStorage.setItem(STORAGE_KEY_HABITS, JSON.stringify(newHabits));
+  const updateHabitsState = (updater: Habit[] | ((prev: Habit[]) => Habit[])) => {
+    setHabits((prev) => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      try {
+        localStorage.setItem(STORAGE_KEY_HABITS, JSON.stringify(next));
+      } catch (err) {
+        console.error('Failed to save habits to localStorage:', err);
+      }
+      return next;
+    });
   };
 
-  const updateGoalsState = (newGoals: Goal[]) => {
-    setGoals(newGoals);
-    localStorage.setItem(STORAGE_KEY_GOALS, JSON.stringify(newGoals));
+  const updateGoalsState = (updater: Goal[] | ((prev: Goal[]) => Goal[])) => {
+    setGoals((prev) => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      try {
+        localStorage.setItem(STORAGE_KEY_GOALS, JSON.stringify(next));
+      } catch (err) {
+        console.error('Failed to save goals to localStorage:', err);
+      }
+      return next;
+    });
   };
 
   // TASK CRUD
@@ -272,30 +290,40 @@ export function useAppState() {
       ...task,
       id: `task-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
     };
-    updateTasksState([...tasks, newTask]);
+    updateTasksState((prev) => [...prev, newTask]);
     return newTask;
   };
 
+  const addMultipleTasks = (tasksToAdd: Omit<Task, 'id'>[]) => {
+    updateTasksState((prev) => {
+      const newTasks: Task[] = tasksToAdd.map((t, index) => ({
+        ...t,
+        id: `task-${Date.now()}-${index}-${Math.random().toString(36).substring(2, 9)}`,
+      }));
+      return [...prev, ...newTasks];
+    });
+  };
+
   const editTask = (id: string, updatedFields: Partial<Omit<Task, 'id'>>) => {
-    const newTasks = tasks.map((t) => (t.id === id ? { ...t, ...updatedFields } : t));
-    updateTasksState(newTasks);
+    updateTasksState((prev) => prev.map((t) => (t.id === id ? { ...t, ...updatedFields } : t)));
   };
 
   const deleteTask = (id: string) => {
-    updateTasksState(tasks.filter((t) => t.id !== id));
+    updateTasksState((prev) => prev.filter((t) => t.id !== id));
   };
 
   const toggleTaskStatus = (id: string) => {
-    const newTasks = tasks.map((t) => {
-      if (t.id === id) {
-        return {
-          ...t,
-          status: (t.status === 'Pending' ? 'Completed' : 'Pending') as 'Pending' | 'Completed',
-        };
-      }
-      return t;
-    });
-    updateTasksState(newTasks);
+    updateTasksState((prev) =>
+      prev.map((t) => {
+        if (t.id === id) {
+          return {
+            ...t,
+            status: (t.status === 'Pending' ? 'Completed' : 'Pending') as 'Pending' | 'Completed',
+          };
+        }
+        return t;
+      })
+    );
   };
 
   // HABIT CRUD

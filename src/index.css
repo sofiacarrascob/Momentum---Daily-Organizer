@@ -1,45 +1,75 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-rounded: "Quicksand", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-  
-  /* Turquoise Custom Palette (#7affc9 themed) */
-  --color-turquoise-50: #f0fffb;
-  --color-turquoise-100: #d2ffef;
-  --color-turquoise-200: #a3ffd9;
-  --color-turquoise-300: #7affc9;
-  --color-turquoise-400: #4effb5;
-  --color-turquoise-500: #7affc9;
-  --color-turquoise-600: #00d984;
-  --color-turquoise-700: #00a866;
-  --color-turquoise-800: #007a4a;
-  --color-turquoise-900: #004d2e;
-  --color-turquoise-950: #002617;
+  --font-brand: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-heading: "Outfit", "Bricolage Grotesque", "Plus Jakarta Sans", sans-serif;
+  --font-sans: "Inter", "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-rounded: "Outfit", "Bricolage Grotesque", "Plus Jakarta Sans", sans-serif;
 
-  /* Orange Custom Palette */
-  --color-orange-50: #fff7ed;
-  --color-orange-100: #ffedd5;
-  --color-orange-200: #fed7aa;
-  --color-orange-300: #fdba74;
-  --color-orange-400: #fb923c;
-  --color-orange-500: #f97316;
-  --color-orange-600: #ea580c;
-  --color-orange-700: #c2410c;
-  --color-orange-800: #9a3412;
-  --color-orange-950: #431407;
+  /* Custom Color System for Momentum */
+  --color-brand-dark: #137B7C;
+  --color-warm-bg: #FEFBEC;
+  --color-dark-text: #301208;
+
+  /* Turquoise Palette (#76DFCB & #31ADAF) */
+  --color-turquoise-50: #f0fbf8;
+  --color-turquoise-100: #d4f6ef;
+  --color-turquoise-200: #a3eedf;
+  --color-turquoise-300: #76DFCB;
+  --color-turquoise-400: #54d4be;
+  --color-turquoise-500: #76DFCB;
+  --color-turquoise-600: #31ADAF;
+  --color-turquoise-700: #238b8d;
+  --color-turquoise-800: #137B7C;
+  --color-turquoise-900: #0d5d5e;
+  --color-turquoise-950: #06393a;
+
+  /* Primary Orange Palette (#EF681E) */
+  --color-orange-50: #fff7f2;
+  --color-orange-100: #fde8db;
+  --color-orange-200: #fbcbb2;
+  --color-orange-300: #f8a57a;
+  --color-orange-400: #f37d40;
+  --color-orange-500: #EF681E;
+  --color-orange-600: #d7500d;
+  --color-orange-700: #b13c07;
+  --color-orange-800: #8c300a;
+  --color-orange-900: #722a0c;
+  --color-orange-950: #3e1203;
+
+  /* Neutral tones adjusted for warm background */
+  --color-neutral-50: #FAF7E8;
+  --color-neutral-100: #F3EFE0;
+  --color-neutral-150: #E9E4D3;
+  --color-neutral-200: #DFD8C4;
+  --color-neutral-300: #C2BBA7;
+  --color-neutral-400: #938C77;
+  --color-neutral-500: #68614E;
+  --color-neutral-600: #504938;
+  --color-neutral-700: #3D3728;
+  --color-neutral-800: #301208;
+  --color-neutral-900: #240d06;
 }
 
 /* Base resets & styling */
 body {
   font-family: var(--font-sans);
-  background-color: #ffffff;
-  color: #374151; /* soft dark gray text */
+  background-color: #FEFBEC;
+  color: #301208;
   margin: 0;
   padding: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom font utility classes */
+.font-brand {
+  font-family: var(--font-brand);
+}
+
+.font-heading {
+  font-family: var(--font-heading);
 }
 
 /* Custom scrollbars for structured list layouts */
@@ -53,10 +83,11 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #e5e7eb;
+  background: #DFD8C4;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #d1d5db;
+  background: #C2BBA7;
 }
+
