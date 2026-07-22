@@ -1,9 +1,13 @@
-const CACHE_NAME = 'momentum-v1';
+const CACHE_NAME = 'momentum-v2';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
   '/manifest.json',
-  '/app_logo.jpg'
+  '/flower-logo.svg',
+  '/favicon.svg',
+  '/apple-touch-icon.png',
+  '/icon-192x192.png',
+  '/icon-512x512.png'
 ];
 
 self.addEventListener('install', (event) => {
